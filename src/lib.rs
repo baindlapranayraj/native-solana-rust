@@ -1,15 +1,8 @@
 use borsh::{BorshDeserialize, BorshSerialize};
 use solana_program::{
-    entrypoint,
-    entrypoint::ProgramResult,
-    pubkey::Pubkey,
-    msg,
-    account_info::AccountInfo,
-    account_info::next_account_info,
-    program::invoke_signed,
-    sysvar::rent::Rent,
-    system_instruction,
-    sysvar::Sysvar,
+    account_info::next_account_info, account_info::AccountInfo, entrypoint,
+    entrypoint::ProgramResult, msg, program::invoke_signed, pubkey::Pubkey, system_instruction,
+    sysvar::rent::Rent, sysvar::Sysvar,
 };
 
 pub mod instruction;
@@ -17,7 +10,6 @@ pub mod state;
 
 use instruction::MovieInstruction;
 use state::MovieAccountState;
-
 
 entrypoint!(process_instruction);
 
@@ -37,7 +29,6 @@ pub fn process_instruction(
     }
 }
 
-
 // Instruction for adding movie-review
 pub fn add_movie_review(
     program_id: &Pubkey,
@@ -49,14 +40,14 @@ pub fn add_movie_review(
     let acccount_info_iter = &mut accounts.iter();
 
     // Getting Accounts
-    let initializer  = next_account_info(acccount_info_iter)?;
-    let pda_account  = next_account_info(acccount_info_iter)?;
-    let system_program  = next_account_info(acccount_info_iter)?;
+    let initializer = next_account_info(acccount_info_iter)?;
+    let pda_account = next_account_info(acccount_info_iter)?;
+    let system_program = next_account_info(acccount_info_iter)?;
 
     // Deriving the PDA
-    let (_movie_review_pda,bump) = Pubkey::find_program_address(
-        &[initializer.key.as_ref(),title.as_bytes().as_ref()],
-        program_id
+    let (_movie_review_pda, bump) = Pubkey::find_program_address(
+        &[initializer.key.as_ref(), title.as_bytes().as_ref()],
+        program_id,
     );
 
     let movie_review_len = 1 + 1 + (4 + title.len()) + (4 + description.len());
@@ -70,20 +61,16 @@ pub fn add_movie_review(
             pda_account.key,
             rent,
             movie_review_len.try_into().unwrap(),
-            program_id
-         ),
+            program_id,
+        ),
         &[
             initializer.clone(),
             pda_account.clone(),
-            system_program.clone()
+            system_program.clone(),
         ],
-        &[&[
-            initializer.key.as_ref(),
-            title.as_bytes().as_ref(),
-            &[bump],
-        ]]
-
-    ).unwrap();
+        &[&[initializer.key.as_ref(), title.as_bytes().as_ref(), &[bump]]],
+    )
+    .unwrap();
 
     msg!("Unpacking the state account");
 
@@ -99,7 +86,6 @@ pub fn add_movie_review(
 
     Ok(())
 }
-
 
 #[cfg(test)]
 mod test {
@@ -118,9 +104,8 @@ mod test {
     }
 }
 
-
-
 // +++++++++++++++++++++++++ Key learnings for native-solana-programs +++++++++++++++++++++++++
 // - borsh crate provides some "traits" like "BorshSerialize" and "BorshDeserialize" for serializing and deserializing the
 //   Rust data(Structs or Enums) to byte array.
-//
+// - PDAs are often considered to be trusted stores of a program's state.
+//   Ensuring the correct program owns the PDAs is a fundamental way to prevent malicious behavior.

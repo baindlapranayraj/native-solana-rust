@@ -2,6 +2,7 @@ use borsh::BorshDeserialize;
 use solana_program::program_error::ProgramError;
 
 pub enum MovieInstruction {
+    // First Instruction is Adding Movie
     AddMovieReview {
         title: String,
         rating: u8,
