@@ -1,8 +1,7 @@
-
-use solana_sdk::program_error::ProgramError;
+use solana_program::program_error::ProgramError;
 use thiserror::Error;
 
-#[derive(Debug,Error)]
+#[derive(Debug, Error)]
 pub enum ReviewErrors {
     #[error("Account is not initialized yet")]
     UninitializedAccount,
@@ -17,10 +16,8 @@ pub enum ReviewErrors {
     InvalidMovieReview,
 
     #[error("Input data exceeds max length")]
-    InvalidDataLength
+    InvalidDataLength,
 }
-
-
 
 // Converting our error to Solana Program Custoum Error
 impl From<ReviewErrors> for ProgramError {
