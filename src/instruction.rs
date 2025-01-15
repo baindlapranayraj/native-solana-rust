@@ -8,6 +8,7 @@ pub enum MovieInstruction {
         rating: u8,
         description: String,
     },
+    
 }
 
 #[derive(BorshDeserialize)]
