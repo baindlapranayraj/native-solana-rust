@@ -1,6 +1,18 @@
 [package]
-name = "native-solana-rust"
-version = "0.1.0"
+name = "native_sol_01"
+version = "0.0.1"
 edition = "2021"
 
+[lib]
+crate-type = ["cdylib", "lib"]
+
+
 [dependencies]
+borsh = "0.9.3"
+solana-program = "2.1.8"
+solana-sdk = "2.1.8"
+
+[dev-dependencies]
+solana-program-test = "2.1.8"
+solana-sdk = "2.1.8"
+tokio = "1.43.0"
